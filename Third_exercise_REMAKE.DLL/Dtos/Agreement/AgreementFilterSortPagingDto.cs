@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Third_exercise_REMAKE.Core.Models;
 
-namespace Third_exercise_REMAKE.BLL.BindingModels.Agreement
+namespace Third_exercise_REMAKE.BLL.Dtos.Agreement
 {
-    public class FilterSortPagingModel
+    public class AgreementFilterSortPagingDto
     {
-        public List<FilterModel> filterModelList { get; set; }
-        public PagingModel pagingModel { get; set; }
-        public SortModel sortModel { get; set; }
+        public List<AgreementFilterDto> filterDtoList { get; set; }
+        public AgreementPagingDto  pagingDto { get; set; }
+        public AgreementSortDto sortDto { get; set; }
     }
     public class QueryResultModel
     {

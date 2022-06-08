@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using Third_exercise_REMAKE.BLL.BindingModels.Agreement;
+using Third_exercise_REMAKE.BLL.Dtos.Agreement;
 using Third_exercise_REMAKE.BLL.Helper;
 using Third_exercise_REMAKE.BLL.IServices;
 using Third_exercise_REMAKE.Core.Models;
@@ -28,10 +28,10 @@ namespace Third_exercise_REMAKE.BLL.Services
             return _TRepository.SaveChanges();
 
         }
-        public QueryResultModel Paging(PagingModel model)
+        public QueryResultModel Paging(AgreementPagingDto dto)
         {
-            int start = model.start ?? 0;
-            int end = model.end ?? 50;
+            int start = dto.start ?? 0;
+            int end = dto.end ?? 50;
 
             List<AgreementModel> queryResult = _agreementRepository.FilterSortPaging(null, null, from: start, total: end - start + 1);
             int queryResultSize = queryResult.Count();
@@ -59,21 +59,21 @@ namespace Third_exercise_REMAKE.BLL.Services
 
             return Dto;
         }
-        public QueryResultModel FilterSortPaging(FilterSortPagingModel model)
+        public QueryResultModel FilterSortPaging(AgreementFilterSortPagingDto dto)
         {
-            int start = model.pagingModel.start ?? 0;
-            int end = model.pagingModel.end ?? 50;
+            int start = dto.pagingDto.start ?? 0;
+            int end = dto.pagingDto.end ?? 50;
 
 
-            var filterModelList = model.filterModelList;
-            var sortModel = model.sortModel;
+            var filterDtoList = dto.filterDtoList;
+            var sortDto = dto.sortDto;
             int blockSize = end - start;
             int queryResultSize = 0;
             int lastIndex = -1;
 
             Expression<Func<AgreementModel, bool>> filterQuery = x => true;
             List<Expression<Func<AgreementModel, bool>>> filterQueries = new List<Expression<Func<AgreementModel, bool>>>();
-            filterModelList.ForEach(filterModel =>
+            filterDtoList.ForEach(filterModel =>
             {
                 switch (filterModel.columnName)
                 {
@@ -107,12 +107,12 @@ namespace Third_exercise_REMAKE.BLL.Services
                 }
             });
 
-            var type = sortModel.sortType;
+            var type = sortDto.sortType;
             Func<IQueryable<AgreementModel>, IOrderedQueryable<AgreementModel>> sortQuery = x => x.OrderBy(x => x.Id);
 
-            if (sortModel != null)
+            if (sortDto != null)
             {
-                switch (sortModel.sortColumn)
+                switch (sortDto.sortColumn)
                 {
                     case "id":
                         if (type == "asc")
@@ -203,6 +203,11 @@ namespace Third_exercise_REMAKE.BLL.Services
             };
 
             return Dto;
+        }
+
+        public override int Update(AgreementModel T)
+        {
+            return base.Update(T);
         }
 
         public bool Delete(string id)

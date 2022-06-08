@@ -8,7 +8,6 @@ using Third_exercise_REMAKE.DAL.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
 
-// Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
     Configuration.GetConnectionString("ProductDB")));
 
@@ -24,9 +23,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-
 builder.Services.AddControllers();
-
 
 builder.Services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
 builder.Services.AddScoped<IAgreementService, AgreementService>();
@@ -34,13 +31,11 @@ builder.Services.AddScoped<IAgreementService, AgreementService>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IAgreementRepository, AgreementRepository>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
