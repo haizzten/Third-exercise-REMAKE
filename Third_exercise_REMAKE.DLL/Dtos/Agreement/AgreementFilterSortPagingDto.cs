@@ -13,9 +13,4 @@ namespace Third_exercise_REMAKE.BLL.Dtos.Agreement
         public AgreementPagingDto  pagingDto { get; set; }
         public AgreementSortDto sortDto { get; set; }
     }
-    public class QueryResultModel
-    {
-        public List<AgreementModel> agreementList { get; set; }
-        public int lastIndex { get; set; }
-    }
 }

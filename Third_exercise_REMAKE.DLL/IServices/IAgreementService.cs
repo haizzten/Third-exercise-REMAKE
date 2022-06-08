@@ -8,11 +8,13 @@ using Third_exercise_REMAKE.Core.Models;
 
 namespace Third_exercise_REMAKE.BLL.IServices
 {
-    public interface IAgreementService : IBaseService<AgreementModel>
+    public interface IAgreementService
     {
         public AgreementModel GetById(string id);
-        public QueryResultModel FilterSortPaging(AgreementFilterSortPagingDto dto);
-        public QueryResultModel Paging(AgreementPagingDto dto);
+        public FilterResultDto FilterSortPaging(AgreementFilterSortPagingDto dto);
+        public FilterResultDto Paging(AgreementPagingDto dto);
+        public AgreementModel Update(AgreementDto dto);
+        public int Create(AgreementModel agreemen);
         public bool Delete(string id);
         public bool IsExist(string id);
     }

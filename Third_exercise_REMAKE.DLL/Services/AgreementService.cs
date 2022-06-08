@@ -12,23 +12,23 @@ using Third_exercise_REMAKE.DAL.IRepository;
 
 namespace Third_exercise_REMAKE.BLL.Services
 {
-    public class AgreementService : BaseService<AgreementModel>, IAgreementService
+    public class AgreementService : IAgreementService
     {
         IAgreementRepository _agreementRepository;
-        public AgreementService(IAgreementRepository TRepository) : base(TRepository)
+        public AgreementService(IAgreementRepository AgreementRepository)
         {
-            _agreementRepository = TRepository;
+            _agreementRepository = AgreementRepository;
             SeedData();
         }
-        public override int Create(AgreementModel agreement)
+        public int Create(AgreementModel agreement)
         {
             agreement.DaysUntilExpiration = agreement.ExpirationDate.Day - agreement.CreatedDate.Day;
 
-            _TRepository.Add(agreement);
-            return _TRepository.SaveChanges();
+            _agreementRepository.Add(agreement);
+            return _agreementRepository.SaveChanges();
 
         }
-        public QueryResultModel Paging(AgreementPagingDto dto)
+        public FilterResultDto Paging(AgreementPagingDto dto)
         {
             int start = dto.start ?? 0;
             int end = dto.end ?? 50;
@@ -51,7 +51,7 @@ namespace Third_exercise_REMAKE.BLL.Services
                 queryResult.RemoveAt(queryResultSize - 1);
             }
 
-            var Dto = new QueryResultModel()
+            var Dto = new FilterResultDto()
             {
                 agreementList = queryResult,
                 lastIndex = lastIndex
@@ -59,11 +59,10 @@ namespace Third_exercise_REMAKE.BLL.Services
 
             return Dto;
         }
-        public QueryResultModel FilterSortPaging(AgreementFilterSortPagingDto dto)
+        public FilterResultDto FilterSortPaging(AgreementFilterSortPagingDto dto)
         {
             int start = dto.pagingDto.start ?? 0;
             int end = dto.pagingDto.end ?? 50;
-
 
             var filterDtoList = dto.filterDtoList;
             var sortDto = dto.sortDto;
@@ -196,18 +195,36 @@ namespace Third_exercise_REMAKE.BLL.Services
                 queryResult.RemoveAt(queryResultSize - 1);
             }
 
-            var Dto = new QueryResultModel()
+            var result = new FilterResultDto()
             {
                 agreementList = queryResult,
                 lastIndex = lastIndex
             };
 
-            return Dto;
+            return result;
         }
 
-        public override int Update(AgreementModel T)
+        public AgreementModel Update(AgreementDto dto)
         {
-            return base.Update(T);
+            if (IsExist(dto.Id + ""))
+            {
+                AgreementModel model = new AgreementModel
+                {
+                    Id = dto.Id,
+                    AgreementName = dto.AgreementName,
+                    AgreementType = dto.AgreementType,
+                    CreatedDate = dto.CreatedDate,
+                    DistributorName = dto.DistributorName,
+                    EffectiveDate = dto.EffectiveDate,
+                    ExpirationDate = dto.ExpirationDate,
+                    QuoteNumber = dto.QuoteNumber,
+                    Status = dto.Status
+                };
+
+                _agreementRepository.Update(model);
+                return GetById(model.Id + "");
+            }
+            else throw new Exception("Id not found");
         }
 
         public bool Delete(string id)
@@ -223,7 +240,7 @@ namespace Third_exercise_REMAKE.BLL.Services
         }
         public AgreementModel GetById(string id)
         {
-            var Agreements = _TRepository.Filter(x => x.Id == Int32.Parse(id));
+            var Agreements = _agreementRepository.Filter(x => x.Id == Int32.Parse(id));
             if (Agreements.Any()) return Agreements.First();
             else return null;
         }

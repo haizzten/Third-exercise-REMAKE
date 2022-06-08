@@ -18,61 +18,44 @@ namespace Third_exercise_REMAKE.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult> Get([FromQuery] int start, int end)
+        public async Task<ActionResult> GetAgreements([FromQuery] AgreementPagingDto dto)
         {
-            AgreementPagingDto dto = new AgreementPagingDto { start = start, end = end };
             return Ok(_agreementService.Paging(dto));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AgreementModel>> Get(string id)
+        public async Task<ActionResult<AgreementModel>> GetAgreement(string id)
         {
-            AgreementModel model = _agreementService.GetById(id);
-            if (model == null)
-            {
-                return NotFound();
-            }
-            return Ok(model);
+            return Ok(_agreementService.GetById(id));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, AgreementModel model)
+        public async Task<IActionResult> UpdateAgreement(string id, AgreementDto dto)
         {
-            if (id != model.Id)
-            {
-                return BadRequest();
-            }
-
-            if (_agreementService.IsExist(id + ""))
-            {
-                _agreementService.Update(model);
-                return Ok(_agreementService.GetById(id + ""));
-            }
-            else
+            if (!_agreementService.IsExist(id))
             {
                 return NotFound();
             }
-
+            return Ok(_agreementService.Update(dto));
         }
 
         [HttpPost]
-        public async Task<ActionResult<AgreementModel>> Post(AgreementModel agreement)
+        public async Task<ActionResult<AgreementModel>> CreateAgreement(AgreementModel agreement)
         {
             int result = _agreementService.Create(agreement);
 
-            if (result == 0)
-            {
-                return BadRequest();
-            }
-            else if (result > 0)
+            if (result > 0)
             {
                 return CreatedAtAction("GetAgreement", new { id = agreement.Id }, agreement);
             }
+            else
+            {
+                return BadRequest();
+            }
 
-            return NoContent();
         }
 
-        [HttpPost("filter-sort-paging")]
+        [HttpPost("filter")]
         public async Task<ActionResult> GetByFilterSortPaging([FromBody] AgreementFilterSortPagingDto dto)
         {
             var result = _agreementService.FilterSortPaging(dto);
