@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Third_exercise_REMAKE.DAL\Third_exercise_REMAKE.DAL.csproj" />
-    <ProjectReference Include="..\Third_exercise_REMAKE.DLL\Third_exercise_REMAKE.BLL.csproj" />
+    <ProjectReference Include="..\Third_exercise_REMAKE.BLL\Third_exercise_REMAKE.BLL.csproj" />
   </ItemGroup>
 
 </Project>
