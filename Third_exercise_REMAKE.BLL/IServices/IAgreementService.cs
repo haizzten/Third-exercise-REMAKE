@@ -14,7 +14,7 @@ namespace Third_exercise_REMAKE.BLL.IServices
         public FilterResultDto FilterSortPaging(AgreementFilterSortPagingDto dto);
         public FilterResultDto Paging(AgreementPagingDto dto);
         public AgreementModel Update(AgreementDto dto);
-        public int Create(AgreementModel agreemen);
+        public int Create(AgreementDto dto);
         public bool Delete(string id);
         public bool IsExist(string id);
     }

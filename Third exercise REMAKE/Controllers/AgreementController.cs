@@ -29,6 +29,21 @@ namespace Third_exercise_REMAKE.Controllers
             return Ok(_agreementService.GetById(id));
         }
 
+        [HttpPost]
+        public async Task<ActionResult<AgreementModel>> CreateAgreement(AgreementDto dto)
+        {
+            int result = _agreementService.Create(dto);
+
+            if (result > 0)
+            {
+                return CreatedAtAction("GetAgreement", new { id = dto.Id }, dto);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAgreement(string id, AgreementDto dto)
         {
@@ -37,22 +52,6 @@ namespace Third_exercise_REMAKE.Controllers
                 return NotFound();
             }
             return Ok(_agreementService.Update(dto));
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<AgreementModel>> CreateAgreement(AgreementModel agreement)
-        {
-            int result = _agreementService.Create(agreement);
-
-            if (result > 0)
-            {
-                return CreatedAtAction("GetAgreement", new { id = agreement.Id }, agreement);
-            }
-            else
-            {
-                return BadRequest();
-            }
-
         }
 
         [HttpPost("filter")]

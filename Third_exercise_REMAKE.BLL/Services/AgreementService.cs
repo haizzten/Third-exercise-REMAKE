@@ -20,11 +20,23 @@ namespace Third_exercise_REMAKE.BLL.Services
             _agreementRepository = AgreementRepository;
             SeedData();
         }
-        public int Create(AgreementModel agreement)
+        public int Create(AgreementDto dto)
         {
-            agreement.DaysUntilExpiration = agreement.ExpirationDate.Day - agreement.CreatedDate.Day;
+            AgreementModel model = new AgreementModel
+            {
+                Id = dto.Id,
+                AgreementName = dto.AgreementName,
+                AgreementType = dto.AgreementType,
+                CreatedDate = dto.CreatedDate,
+                DistributorName = dto.DistributorName,
+                EffectiveDate = dto.EffectiveDate,
+                ExpirationDate = dto.ExpirationDate,
+                QuoteNumber = dto.QuoteNumber,
+                Status = dto.Status,
+                DaysUntilExpiration = new TimeSpan((dto.ExpirationDate - dto.CreatedDate).Ticks).Days
+            };
 
-            _agreementRepository.Add(agreement);
+            _agreementRepository.Add(model);
             return _agreementRepository.SaveChanges();
 
         }
@@ -218,10 +230,12 @@ namespace Third_exercise_REMAKE.BLL.Services
                     EffectiveDate = dto.EffectiveDate,
                     ExpirationDate = dto.ExpirationDate,
                     QuoteNumber = dto.QuoteNumber,
-                    Status = dto.Status
+                    Status = dto.Status,
+                    DaysUntilExpiration = new TimeSpan((dto.ExpirationDate - dto.CreatedDate).Ticks).Days
                 };
 
                 _agreementRepository.Update(model);
+                _agreementRepository.SaveChanges();
                 return GetById(model.Id + "");
             }
             else throw new Exception("Id not found");
